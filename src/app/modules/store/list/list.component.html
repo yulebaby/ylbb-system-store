@@ -1,0 +1,37 @@
+<div class="container">
+  <ea-list-page 
+    #EaListPage 
+    url="/advertising/listContractShop" 
+    [queryNode]="queryNode" 
+    [tableThead]="[ '广告ID', '客户名称', '广告类型', '广告样式', '时长', '广告费用', '投放时间', '提交人', '投放日期', '下线日期', '状态', '投放城市', '广告标签', '投放数据', '操作' ]"
+    [EaTableTbodyTr]="EaTableTbodyTr" 
+    [EaBtns]="EaBtns">
+    <ng-template #EaTableTbodyTr let-data>
+      <td>{{ data.id }}</td>
+      <td>{{ data.advertiserName }}</td>
+      <td>{{ data.advertisingType == 1 ? '图片' : '视频' }}</td>
+      <td>{{ data.advertisingStyle == 1 ? '横屏' : data.advertisingStyle == 2 ? '竖屏' : '全屏' }}</td>
+      <td>{{ data.advertisingTime }}</td>
+      <td>{{ data.advertisingCost }}</td>
+      <td>{{ data.launchDate }} - {{ data.offlineDate }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>{{ data.xxxx }}</td>
+      <td>
+        <!-- <nz-tag [nzColor]="data.status == 0 ? '#2db7f5' : ''">{{ data.status == 0 ? '启用' : '停用' }}</nz-tag> -->
+      </td>
+      <td>
+        <a href="javascript:;" (click)="update(data)">编辑</a>
+        <nz-divider nzType="vertical"></nz-divider>
+        <a href="javascript:;" (click)="delete(data.id)">编辑</a>
+      </td>
+    </ng-template>
+    <ng-template #EaBtns>
+      <button nz-button nzType="dashed" nzBlock (click)="update()" [style.margin-bottom]="'24px'"><i class="anticon anticon-plus"></i>新建广告</button>
+    </ng-template>
+  </ea-list-page>
+</div>

@@ -1,0 +1,9 @@
+<nz-upload
+  [nzBeforeUpload]="beforeUpload" 
+  [(nzFileList)]="files" 
+  [nzRemove]="deleteFile"
+  [nzShowButton]="files?.length < allowuploadNo">
+  <button nz-button>
+    <i nz-icon type="upload"></i><span>点击上传文件</span>
+  </button>
+</nz-upload>

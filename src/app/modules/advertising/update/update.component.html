@@ -1,0 +1,124 @@
+<form nz-form [formGroup]="formGroup">
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="advertiserName">客户名称</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入客户名称" formControlName="advertiserName" id="advertiserName">
+          <nz-form-explain *ngIf="formGroup.get('advertiserName').dirty && formGroup.get('advertiserName').hasError('required')">请输入客户名称！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="advertisingCost">广告费用</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入广告费用" formControlName="advertisingCost" id="advertisingCost">
+          <nz-form-explain *ngIf="formGroup.get('advertisingCost').dirty && formGroup.get('advertisingCost').hasError('required')">请输入客户名称！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>投放品牌</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="brandCode" nzPlaceHolder="请选择投放品牌，支持多选" nzMode="tags">
+            <nz-option nzLabel="鱼乐贝贝" [nzValue]="1"></nz-option>
+            <nz-option nzLabel="贝贝约" [nzValue]="2"></nz-option>
+            <nz-option nzLabel="鱼儿亲水" [nzValue]="3"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label>投放标签</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="labelId" nzPlaceHolder="请选择投放标签，支持多选" nzMode="tags">
+            <nz-option nzLabel="鱼乐贝贝" [nzValue]="1"></nz-option>
+            <nz-option nzLabel="贝贝约" [nzValue]="2"></nz-option>
+            <nz-option nzLabel="鱼儿亲水" [nzValue]="3"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>投放城市</nz-form-label>
+        <nz-form-control>
+          
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>投放日期</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="date" nzAllowClear nzFormat="yyyy-MM-dd"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>广告样式</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="advertisingStyle">
+            <nz-option nzLabel="横屏" [nzValue]="1"></nz-option>
+            <nz-option nzLabel="竖屏" [nzValue]="2"></nz-option>
+            <nz-option nzLabel="全屏" [nzValue]="3"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>广告类型</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="advertisingType">
+            <nz-option nzLabel="图片" [nzValue]="1"></nz-option>
+            <nz-option nzLabel="视频" [nzValue]="2"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="24">
+      <nz-form-item>
+        <nz-form-label nzRequired>广告{{ formGroup.get('advertisingType').value == 1 ? '图片' : '视频' }}</nz-form-label>
+        <nz-form-control>
+          <ea-upload-file formControlName="sourceUrl"></ea-upload-file>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8" *ngIf="formGroup.get('advertisingStyle').value == 1">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>顶部内容（图片）</nz-form-label>
+        <nz-form-control>
+          <ea-upload-picture formControlName="topPicture"></ea-upload-picture>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>底部内容（图片）</nz-form-label>
+        <nz-form-control>
+          <ea-upload-picture formControlName="downPicture"></ea-upload-picture>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+</form>
+
+<div class="drawer-footer">
+  <button nz-button (click)="closeDrawer()">取消</button>
+  <button nz-button nzType="primary" [nzLoading]="saveLoading" (click)="save()">保存</button>
+</div>
