@@ -1,0 +1,85 @@
+<form nz-form [formGroup]="formGroup">
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>品牌名称</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="brandCode" nzPlaceHolder="请选择品牌名称">
+            <nz-option *ngFor="let option of brandList" [nzLabel]="option.brandName" [nzValue]="option.brandCode"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="formGroup.get('brandCode').dirty && formGroup.get('brandCode').hasError('required')">请选择品牌名称！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="contractName">客户名称</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入客户名称" formControlName="contractName" id="contractName">
+          <nz-form-explain *ngIf="formGroup.get('contractName').dirty && formGroup.get('contractName').hasError('required')">请输入客户名称！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="contractPhone">联系方式</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入联系方式" formControlName="contractPhone" id="contractPhone">
+          <nz-form-explain *ngIf="formGroup.get('contractPhone').dirty && formGroup.get('contractPhone').hasError('required')">请输入联系方式！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired nzFor="shopName">门店名称</nz-form-label>
+        <nz-form-control>
+          <input nz-input placeholder="请输入门店名称" formControlName="shopName" id="shopName">
+          <nz-form-explain *ngIf="formGroup.get('shopName').dirty && formGroup.get('shopName').hasError('required')">请输入门店名称！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <nz-form-item>
+      <nz-form-label nzRequired>所在地址</nz-form-label>
+      <nz-form-control>
+        <nz-cascader formControlName="address" [nzLoadData]="loadData" nzPlaceHolder="请选择所在地址"></nz-cascader>
+        <nz-form-explain *ngIf="formGroup.get('address').dirty && formGroup.get('address').hasError('required')">请选择所在地址！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-row nzGutter="8">
+    <nz-form-item>
+      <nz-form-label nzRequired nzFor="shopAddress">详细地址</nz-form-label>
+      <nz-form-control>
+        <textarea nz-input placeholder="请输入详细地址" formControlName="shopAddress" id="shopAddress" [nzAutosize]="{ minRows: 2, maxRows: 4 }"></textarea>
+        <nz-form-explain *ngIf="formGroup.get('shopAddress').dirty && formGroup.get('shopAddress').hasError('required')">请输入详细地址！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-row nzGutter="8">
+    <nz-form-item>
+      <nz-form-label nzRequired nzFor="shopAddress">签约日期</nz-form-label>
+      <nz-form-control>
+        <nz-date-picker formControlName="signingDate" nzFormat="yyyy-MM-dd" nzPlaceHolder="请选择签约日期"></nz-date-picker>
+        <nz-form-explain *ngIf="formGroup.get('shopAddress').dirty && formGroup.get('shopAddress').hasError('required')">请选择签约日期！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  <div nz-row nzGutter="8">
+    <nz-form-item>
+      <nz-form-label nzRequired>合同附件</nz-form-label>
+      <nz-form-control>
+        <ea-upload-picture formControlName="contractAttachment"></ea-upload-picture>
+        <nz-form-explain *ngIf="formGroup.get('contractAttachment').dirty && formGroup.get('contractAttachment').hasError('required')">请上传合同附件！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+</form>
+
+<div class="drawer-footer">
+  <button nz-button (click)="close()">取消</button>
+  <button nz-button nzType="primary" [nzLoading]="saveLoading" (click)="save()">保存</button>
+</div>

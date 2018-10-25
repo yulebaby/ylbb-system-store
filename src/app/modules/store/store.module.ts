@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { StoreRoutingModule } from './store-routing.module';
 import { ListComponent } from './list/list.component';
+import { UpdateComponent } from './update/update.component';
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { ListComponent } from './list/list.component';
     StoreRoutingModule,
     NgRelaxModule
   ],
-  declarations: [ListComponent]
+  declarations: [ListComponent, UpdateComponent],
+  entryComponents: [UpdateComponent]
 })
 export class StoreModule { }

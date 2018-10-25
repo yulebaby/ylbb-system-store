@@ -20,6 +20,7 @@ export class NoopInterceptor implements HttpInterceptor {
         url: environment.domain + req.url
       });
     }
+
     /**
      * If Method Post
      *    序列化请求参数 {key1: value1, key2: value2} => key1=value1&key2=value2
@@ -28,7 +29,7 @@ export class NoopInterceptor implements HttpInterceptor {
      */
     if (req.method === 'POST') {
       req = req.clone({
-        body: serialize(req.body),
+        body: serialize(Object.assign(req.body, { token: 'xxxxxxxx' })),
         setHeaders: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
         withCredentials: false
       })

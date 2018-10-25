@@ -1,8 +1,9 @@
+import { ListPageComponent } from './../../../ng-relax/components/list-page/list-page.component';
 import { UpdateComponent } from './../update/update.component';
 import { NzModalService, NzDrawerService } from 'ng-zorro-antd';
 import { HttpService } from './../../../ng-relax/services/http.service';
 import { QueryNode } from './../../../ng-relax/components/query/query.component';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-list',
@@ -10,6 +11,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
+
+  @ViewChild('listPage') listPage: ListPageComponent;
 
   queryNode: QueryNode[] = [
     {
@@ -58,11 +61,6 @@ export class ListComponent implements OnInit {
         advertisingInfo
       }
     });
-    drawerRef.afterClose.subscribe(res => {});
+    drawerRef.afterClose.subscribe(res => res && this.listPage.EaTable._request());
   }
-
-  delete(data) {
-
-  }
-
 }

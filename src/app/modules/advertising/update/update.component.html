@@ -25,10 +25,9 @@
         <nz-form-label nzRequired>投放品牌</nz-form-label>
         <nz-form-control>
           <nz-select formControlName="brandCode" nzPlaceHolder="请选择投放品牌，支持多选" nzMode="tags">
-            <nz-option nzLabel="鱼乐贝贝" [nzValue]="1"></nz-option>
-            <nz-option nzLabel="贝贝约" [nzValue]="2"></nz-option>
-            <nz-option nzLabel="鱼儿亲水" [nzValue]="3"></nz-option>
+            <nz-option *ngFor="let option of brandList" [nzLabel]="option.brandName" [nzValue]="option.brandCode"></nz-option>
           </nz-select>
+          <nz-form-explain *ngIf="formGroup.get('brandCode').dirty && formGroup.get('brandCode').hasError('required')">请选择投放品牌，支持多选！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -37,9 +36,7 @@
         <nz-form-label>投放标签</nz-form-label>
         <nz-form-control>
           <nz-select formControlName="labelId" nzPlaceHolder="请选择投放标签，支持多选" nzMode="tags">
-            <nz-option nzLabel="鱼乐贝贝" [nzValue]="1"></nz-option>
-            <nz-option nzLabel="贝贝约" [nzValue]="2"></nz-option>
-            <nz-option nzLabel="鱼儿亲水" [nzValue]="3"></nz-option>
+            <nz-option *ngFor="let option of labelList" [nzLabel]="option.name" [nzValue]="option.id"></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -48,17 +45,40 @@
   <div nz-row nzGutter="8">
     <div nz-col nzSpan="12">
       <nz-form-item>
-        <nz-form-label nzRequired>投放城市</nz-form-label>
+        <nz-form-label nzRequired>是否投放全国范围</nz-form-label>
         <nz-form-control>
-          
+          <nz-switch formControlName="isAll" nzCheckedChildren="投放全国" nzUnCheckedChildren="投放部分门店"></nz-switch>
         </nz-form-control>
       </nz-form-item>
     </div>
     <div nz-col nzSpan="12">
       <nz-form-item>
-        <nz-form-label nzRequired>投放日期</nz-form-label>
+        <nz-form-label nzRequired nzFor="advertisingTime">广告展示时间</nz-form-label>
         <nz-form-control>
-          <nz-range-picker formControlName="date" nzAllowClear nzFormat="yyyy-MM-dd"></nz-range-picker>
+          <input nz-input placeholder="请输入广告展示时间" formControlName="advertisingTime" id="advertisingTime">
+          <nz-form-explain *ngIf="formGroup.get('advertisingTime').dirty && formGroup.get('advertisingTime').hasError('required')">请输入广告展示时间！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8" *ngIf="!formGroup.get('isAll').value">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>投放城市</nz-form-label>
+        <nz-form-control>
+          <nz-cascader formControlName="address" [nzLoadData]="loadData" nzPlaceHolder="请选择投放城市"></nz-cascader>
+          <nz-form-explain *ngIf="formGroup.get('address').dirty && formGroup.get('address').hasError('required')">请选择投放城市！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+    <div nz-col nzSpan="12">
+      <nz-form-item>
+        <nz-form-label nzRequired>投放门店</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="shops" nzPlaceHolder="请选择投放门店，支持多选" nzMode="tags">
+            <nz-option *ngFor="let option of shopList" [nzLabel]="option.shopName" [nzValue]="option.shopId"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="formGroup.get('shops').dirty && formGroup.get('shops').hasError('required')">请选择投放门店，支持多选！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -78,6 +98,16 @@
     </div>
     <div nz-col nzSpan="12">
       <nz-form-item>
+        <nz-form-label nzRequired>投放日期</nz-form-label>
+        <nz-form-control>
+          <nz-range-picker formControlName="date" nzAllowClear nzFormat="yyyy-MM-dd"></nz-range-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </div>
+  <div nz-row nzGutter="8">
+    <div nz-col nzSpan="12">
+      <nz-form-item>
         <nz-form-label nzRequired>广告类型</nz-form-label>
         <nz-form-control>
           <nz-select formControlName="advertisingType">
@@ -87,13 +117,12 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-  </div>
-  <div nz-row nzGutter="8">
-    <div nz-col nzSpan="24">
+    <div nz-col nzSpan="12">
       <nz-form-item>
         <nz-form-label nzRequired>广告{{ formGroup.get('advertisingType').value == 1 ? '图片' : '视频' }}</nz-form-label>
         <nz-form-control>
           <ea-upload-file formControlName="sourceUrl"></ea-upload-file>
+          <nz-form-explain *ngIf="formGroup.get('sourceUrl').dirty && formGroup.get('sourceUrl').hasError('required')">请上传广告{{ formGroup.get('advertisingType').value == 1 ? '图片' : '视频' }}！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -104,6 +133,7 @@
         <nz-form-label nzRequired>顶部内容（图片）</nz-form-label>
         <nz-form-control>
           <ea-upload-picture formControlName="topPicture"></ea-upload-picture>
+          <nz-form-explain *ngIf="formGroup.get('topPicture').dirty && formGroup.get('topPicture').hasError('required')">请上传顶部图片！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -112,6 +142,7 @@
         <nz-form-label nzRequired>底部内容（图片）</nz-form-label>
         <nz-form-control>
           <ea-upload-picture formControlName="downPicture"></ea-upload-picture>
+          <nz-form-explain *ngIf="formGroup.get('downPicture').dirty && formGroup.get('downPicture').hasError('required')">请上传顶部图片！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
