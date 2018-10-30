@@ -26,8 +26,9 @@
       <nz-form-item>
         <nz-form-label nzRequired nzFor="contractPhone">联系方式</nz-form-label>
         <nz-form-control>
-          <input nz-input placeholder="请输入联系方式" formControlName="contractPhone" id="contractPhone">
+          <input nz-input placeholder="请输入联系方式" formControlName="contractPhone" id="contractPhone" maxlength="11">
           <nz-form-explain *ngIf="formGroup.get('contractPhone').dirty && formGroup.get('contractPhone').hasError('required')">请输入联系方式！</nz-form-explain>
+          <nz-form-explain *ngIf="formGroup.get('contractPhone').dirty && formGroup.get('contractPhone').hasError('pattern')">请输入正确的联系方式！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>

@@ -4,7 +4,7 @@
     [allowSpace]="false"
     url="/contractShop/listContractShop" 
     [queryNode]="queryNode" 
-    [tableThead]="[ '品牌', '合同编号', '客户姓名', '联系方式', '门店名称', '签约员工', '签约时间', '安装日期', '安装负责人', '大屏状态', '合同状态', '合同原件', {name: '操作', right: 0} ]"
+    [tableThead]="[ '品牌', '合同编号', '客户姓名', '联系方式', '门店名称', '签约员工', '签约时间', '安装日期', '大屏状态', '合同状态', '合同附件', {name: '操作', right: 0} ]"
     [EaTableTbodyTr]="EaTableTbodyTr" 
     [EaBtns]="EaBtns">
     <ng-template #EaTableTbodyTr let-data>
@@ -16,7 +16,6 @@
       <td>{{ data.createUser }}</td>
       <td>{{ data.signingDate }}</td>
       <td>{{ data.installationDate }}</td>
-      <td>{{ data.construct }}</td>
       <td>{{ data.equipmentStatus == 1 ? '开启' : '关闭' }}</td>
       <td>{{ data.contractStatus == 1 ? '正式' : data.contractStatus == 2 ? '预置' : data.contractStatus == 3 ? '解约' : data.contractStatus == 4 ? '废弃' : '已绑定' }}</td>
       <td>{{ data.contractAttachment }}</td>
@@ -48,6 +47,7 @@
   [(nzVisible)]="showModal" 
   [nzTitle]="formGroup.get('contractStatus').value == 3 ? '解约合同' : formGroup.get('contractStatus').value == 4 ? '废弃合同' : '绑定账号'" 
   (nzOnCancel)="showModal = false" 
+  [nzOkLoading]="saveLoading"
   (nzOnOk)="save()">
   <form nz-form [formGroup]=formGroup>
     <nz-form-item>
@@ -101,8 +101,8 @@
   [(nzVisible)]="showPreview" 
   nzTitle="查看账号" 
   (nzOnCancel)="showPreview = false"
-  nzOkText="重置账号"
-  (nzOnOk)="resetPassword()">
+  nzOkText="确定"
+  (nzOnOk)="showPreview = false">
 
   <nz-form-item>
     <nz-form-label [nzSpan]="6">合同编号</nz-form-label>
@@ -141,9 +141,8 @@
   <ng-container *ngFor="let item of recordList">
     <nz-divider></nz-divider>
     <div>
-      <p>{{ item.createTime }}<span style="margin-left: 24px;">操作人：{{ item.operatorName }}</span></p>
+      <p>{{ item.createTime | date: 'yyyy-MM-dd HH:mm:ss' }}<span style="margin-left: 24px;">操作人：{{ item.operatorName }}</span></p>
       <p>{{ item.recordContent }}</p>
     </div>
   </ng-container>
-
 </nz-modal>

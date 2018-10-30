@@ -18,28 +18,29 @@ export class ListComponent implements OnInit {
 
   queryNode: QueryNode[] = [
     {
-      label: '客户名称',
+      label: '门店名称',
       type: 'input',
-      key: 'advertiserName'
+      key: 'shopName'
     },
     {
-      label: '类型',
-      key: 'advertisingType',
+      label: '品牌',
+      key: 'brandCode',
       type: 'select',
-      options: [{ name: '图片', id: 1 }, { name: '视频', id: 2 }]
+      optionsUrl: '/advertising/listBrand',
+      optionKey: { label: 'brandName', value: 'brandCode'}
     },
     {
-      label: '状态',
-      key: 'status',
+      label: '合同状态',
+      key: 'contractStatus',
       type: 'select',
-      options: [{ name: '生效', id: 0 }, { name: '失效', id: -1 }]
+      options: [{ name: '正式', id: 1 }, { name: '预置', id: 2 }, { name: '解约', id: 3 }, { name: '废弃', id: 4 }, { name: '已绑定', id: 5 }]
     },
     {
-      label: '投放日期',
-      key: 'launchDate',
-      valueKey: ['launchDateStart', 'launchDateEnd'],
-      type: 'rangepicker'
-    }
+      label: '大屏状态',
+      key: 'equipmentStatus',
+      type: 'select',
+      options: [{ name: '开', id: 1 }, { name: '关', id: 2 }]
+    },
   ];
 
   formGroup: FormGroup;
@@ -68,7 +69,7 @@ export class ListComponent implements OnInit {
 
   update(storeInfo = {}) {
     const drawerRef = this.drawer.create({
-      nzTitle: '广告信息',
+      nzTitle: '门店信息',
       nzContent: UpdateComponent,
       nzWidth: 720,
       nzBodyStyle: {
@@ -126,6 +127,7 @@ export class ListComponent implements OnInit {
     this.formGroup.patchValue(storeInfo);
   }
 
+  saveLoading: boolean;
   save() {
     if (this.formGroup.invalid) {
       for (let control in this.formGroup.controls) {
@@ -133,6 +135,7 @@ export class ListComponent implements OnInit {
         this.formGroup.controls[control].updateValueAndValidity();
       }
     } else {
+      this.saveLoading = true;
       let params = this.formGroup.value;
       if (this.formGroup.get('contractStatus').value == 5) {
         params.installationDate = this.format.transform(params.installationDate, 'yyyy-MM-dd');
@@ -141,7 +144,8 @@ export class ListComponent implements OnInit {
       this.http.post('/contractShop/operatorContractShop', { paramJson: JSON.stringify(params) }).then(res => {
         this.showModal = false;
         this.listPage.EaTable._request();
-      })
+        this.saveLoading = false;
+      }).catch(err => this.saveLoading = false);
     }
   }
 

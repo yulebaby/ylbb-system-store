@@ -46,7 +46,7 @@ export class UpdateComponent implements OnInit {
     });
     if (this.advertisingInfo.id) {
       this.advertisingInfo.brandCode = this.advertisingInfo.brandCode.split(',');
-      this.advertisingInfo.labelId = this.advertisingInfo.labelId.split(',').map(res => res = parseInt(res));
+      this.advertisingInfo.labelId = this.advertisingInfo.labelId ?this.advertisingInfo.labelId.split(',').map(res => res = parseInt(res)) : [];
       this.advertisingInfo.date = [new Date(this.advertisingInfo.launchDate), new Date(this.advertisingInfo.offlineDate)];
       this.advertisingInfo.isAll = this.advertisingInfo.province == 'quanguo';
       this.formGroup.patchValue(this.advertisingInfo);
@@ -56,12 +56,12 @@ export class UpdateComponent implements OnInit {
         this.http.post('/advertising/listAdvertiesmentShop', { paramJson: JSON.stringify({ city: this.advertisingInfo.city }) }, false).then(res => this.shopList = res.result);
         let addVal = this.advertisingInfo.id && this.advertisingInfo.province ? [this.advertisingInfo.province, this.advertisingInfo.city] : null;
         this.formGroup.addControl('address', new FormControl(addVal, [Validators.required]));
-        let shopVal = this.advertisingInfo.id && this.advertisingInfo.province ? this.advertisingInfo.shopIds.split(',').map(res => res = parseInt(res)) : null;
+        let shopVal = this.advertisingInfo.id && this.advertisingInfo.province && this.advertisingInfo.shopIds ? this.advertisingInfo.shopIds.split(',').map(res => res = parseInt(res)) : null;
         this.formGroup.addControl('shops', new FormControl(shopVal, [Validators.required]));
       }
       if (this.advertisingInfo.advertisingStyle == 1) {
-        this.formGroup.addControl('topPicture', new FormControl(this.advertisingInfo.topPicture));
-        this.formGroup.addControl('downPicture', new FormControl(this.advertisingInfo.downPicture));
+        this.formGroup.addControl('topPicture', new FormControl(this.advertisingInfo.topPicture || null));
+        this.formGroup.addControl('downPicture', new FormControl(this.advertisingInfo.downPicture, [Validators.required]));
       }
     }
 
@@ -71,8 +71,8 @@ export class UpdateComponent implements OnInit {
       if (!res) {
         let addVal = this.advertisingInfo.id && this.advertisingInfo.city ? [this.advertisingInfo.province, this.advertisingInfo.city] : null;
         this.formGroup.addControl('address', new FormControl(addVal, [Validators.required]));
-        let shopVal = this.advertisingInfo.id && this.advertisingInfo.city ? this.advertisingInfo.shopIds.split(',').map(r => parseInt(r)) : null;
-        this.formGroup.addControl('shops', new FormControl(shopVal, [Validators.required]));
+        let shopVal = this.advertisingInfo.id && this.advertisingInfo.shopIds ? this.advertisingInfo.shopIds.split(',').map(r => parseInt(r)) : null;
+        this.formGroup.addControl('shops', new FormControl(shopVal));
 
         /* ------------------- 根据所选城市查询门店列表 ------------------- */
         this.formGroup.get('address').valueChanges.subscribe(e => {
@@ -89,7 +89,7 @@ export class UpdateComponent implements OnInit {
     /* ------------------ 广告样式：如果为横屏 则需要填写上下展示图片 ------------------ */
     this.formGroup.get('advertisingStyle').valueChanges.subscribe(val => {
       if (val == 1) {
-        this.formGroup.addControl('topPicture', new FormControl(this.advertisingInfo.topPicture || null, [Validators.required]));
+        this.formGroup.addControl('topPicture', new FormControl(this.advertisingInfo.topPicture || null));
         this.formGroup.addControl('downPicture', new FormControl(this.advertisingInfo.downPicture || null, [Validators.required]));
       } else {
         this.formGroup.removeControl('topPicture');
@@ -120,7 +120,7 @@ export class UpdateComponent implements OnInit {
       } else {
         params.province = params.address[0];
         params.city = params.address[1];
-        params.shopIds = params.shops.join(',');
+        params.shopIds = params.shops ? params.shops.join(',') : '';
       }
       params.launchDate = this.format.transform(params.date[0], 'yyyy-MM-dd');
       params.offlineDate = this.format.transform(params.date[1], 'yyyy-MM-dd');

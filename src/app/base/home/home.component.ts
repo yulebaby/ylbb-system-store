@@ -69,4 +69,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+
+  _disabledDate(current: Date): boolean {
+    return current && current.getTime() <= Date.now();
+  }
+
+
 }

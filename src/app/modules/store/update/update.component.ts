@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from 'src/app/ng-relax/services/http.service';
 import { NzDrawerRef } from 'ng-zorro-antd';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -33,7 +33,7 @@ export class UpdateComponent implements OnInit {
       id: [],
       brandCode: [, [Validators.required]],
       contractName: [, [Validators.required]],
-      contractPhone: [, [Validators.required]],
+      contractPhone: [, [Validators.required, Validators.pattern(/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/)]],
       shopName: [, [Validators.required]],
       address: [, [Validators.required]],
       shopAddress: [, [Validators.required]],
@@ -44,6 +44,7 @@ export class UpdateComponent implements OnInit {
     if (this.storeInfo.id) {
       this.storeInfo.address = [this.storeInfo.province, this.storeInfo.city, this.storeInfo.area];
       this.formGroup.patchValue(this.storeInfo);
+      this.formGroup.addControl('contractStatus', new FormControl(this.storeInfo.contractStatus))
     }
   }
 

@@ -28,9 +28,9 @@ export class ListComponent implements OnInit {
     },
     {
       label: '状态',
-      key: 'status',
+      key: 'advertisingStatus',
       type: 'select',
-      options: [{ name: '生效', id: 0 }, { name: '失效', id: -1 }]
+      options: [{ name: '待投放', id: 1 }, { name: '投放中', id: 2 }, { name: '已下线', id: 3 }]
     },
     {
       label: '投放日期',

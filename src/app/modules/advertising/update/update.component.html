@@ -73,12 +73,11 @@
     </div>
     <div nz-col nzSpan="12">
       <nz-form-item>
-        <nz-form-label nzRequired>投放门店</nz-form-label>
+        <nz-form-label>投放门店</nz-form-label>
         <nz-form-control>
           <nz-select formControlName="shops" nzPlaceHolder="请选择投放门店，支持多选" nzMode="tags">
             <nz-option *ngFor="let option of shopList" [nzLabel]="option.shopName" [nzValue]="option.shopId"></nz-option>
           </nz-select>
-          <nz-form-explain *ngIf="formGroup.get('shops').dirty && formGroup.get('shops').hasError('required')">请选择投放门店，支持多选！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -130,10 +129,9 @@
   <div nz-row nzGutter="8" *ngIf="formGroup.get('advertisingStyle').value == 1">
     <div nz-col nzSpan="12">
       <nz-form-item>
-        <nz-form-label nzRequired>顶部内容（图片）</nz-form-label>
+        <nz-form-label>顶部内容（图片）</nz-form-label>
         <nz-form-control>
           <ea-upload-picture formControlName="topPicture"></ea-upload-picture>
-          <nz-form-explain *ngIf="formGroup.get('topPicture').dirty && formGroup.get('topPicture').hasError('required')">请上传顶部图片！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
