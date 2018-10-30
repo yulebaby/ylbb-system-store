@@ -104,11 +104,11 @@ export class UploadFileComponent implements OnInit {
       //   observer.next(null);
       //   observer.complete();
       // } else 
-      if (!(file.size / 1024 / 1024 < 20)) {
-        this.message.error(`图片大小超出20MB，请更换图片`);
-        observer.next(null);
-        observer.complete();
-      } else {
+      // if (!(file.size / 1024 / 1024 < 20)) {
+      //   this.message.error(`图片大小超出20MB，请更换图片`);
+      //   observer.next(null);
+      //   observer.complete();
+      // } else {
         let fileName = new Date().getTime() + `.${fileType}`;
 
         this._aliOssClient.multipartUpload(fileName, file, {}).then(res => {
@@ -128,7 +128,7 @@ export class UploadFileComponent implements OnInit {
           observer.complete();
           this.message.error('图片上传失败，请重新尝试');
         })
-      }
+      // }
     })
   }
 

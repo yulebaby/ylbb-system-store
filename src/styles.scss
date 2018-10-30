@@ -69,3 +69,10 @@ body {
     margin-right: 8px;
   }
 }
+
+.ant-calendar-picker {
+  width: 100% !important;
+}
+:host ::ng-deep .ant-calendar-picker {
+  width: 100% !important;
+}

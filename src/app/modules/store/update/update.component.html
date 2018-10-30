@@ -70,10 +70,9 @@
   </div>
   <div nz-row nzGutter="8">
     <nz-form-item>
-      <nz-form-label nzRequired>合同附件</nz-form-label>
+      <nz-form-label>合同附件</nz-form-label>
       <nz-form-control>
         <ea-upload-picture formControlName="contractAttachment"></ea-upload-picture>
-        <nz-form-explain *ngIf="formGroup.get('contractAttachment').dirty && formGroup.get('contractAttachment').hasError('required')">请上传合同附件！</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
   </div>

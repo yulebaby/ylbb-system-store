@@ -58,7 +58,7 @@ export class ListComponent implements OnInit {
         'padding-bottom': '53px'
       },
       nzContentParams: {
-        advertisingInfo
+        advertisingInfo: JSON.parse(JSON.stringify(advertisingInfo))
       }
     });
     drawerRef.afterClose.subscribe(res => res && this.listPage.EaTable._request());

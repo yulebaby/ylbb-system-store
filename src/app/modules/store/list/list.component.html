@@ -1,9 +1,10 @@
 <div class="container">
   <ea-list-page 
     #listPage 
+    [allowSpace]="false"
     url="/contractShop/listContractShop" 
     [queryNode]="queryNode" 
-    [tableThead]="[ '品牌', '合同编号', '客户姓名', '联系方式', '门店名称', '签约员工', '签约时间', '安装日期', '安装负责人', '大屏状态', '合同状态', '合同原件', '操作' ]"
+    [tableThead]="[ '品牌', '合同编号', '客户姓名', '联系方式', '门店名称', '签约员工', '签约时间', '安装日期', '安装负责人', '大屏状态', '合同状态', '合同原件', {name: '操作', right: 0} ]"
     [EaTableTbodyTr]="EaTableTbodyTr" 
     [EaBtns]="EaBtns">
     <ng-template #EaTableTbodyTr let-data>
@@ -17,12 +18,20 @@
       <td>{{ data.installationDate }}</td>
       <td>{{ data.construct }}</td>
       <td>{{ data.equipmentStatus == 1 ? '开启' : '关闭' }}</td>
-      <td>{{ data.contractStatus == 1 ? '正式' : data.contractStatus == 2 ? '预置' : data.contractStatus == 1 ? '解约' : '废弃' }}</td>
+      <td>{{ data.contractStatus == 1 ? '正式' : data.contractStatus == 2 ? '预置' : data.contractStatus == 3 ? '解约' : data.contractStatus == 4 ? '废弃' : '已绑定' }}</td>
       <td>{{ data.contractAttachment }}</td>
-      <td>
+      <td [nzRight]="0">
         <a href="javascript:;" (click)="update(data)">编辑</a>
+        <nz-divider nzType="vertical" *ngIf="data.contractStatus == 2"></nz-divider>
+        <a href="javascript:;" (click)="discarded(data)" *ngIf="data.contractStatus == 2">废弃</a>
+        <nz-divider nzType="vertical" *ngIf="data.contractStatus == 1 || data.contractStatus == 5"></nz-divider>
+        <a href="javascript:;" (click)="dissolution(data)" *ngIf="data.contractStatus == 1 || data.contractStatus == 5">解约</a>
+        <nz-divider nzType="vertical" *ngIf="data.contractStatus == 1"></nz-divider>
+        <a href="javascript:;" (click)="binding(data)" *ngIf="data.contractStatus == 1">绑定账号</a>
+        <nz-divider nzType="vertical" *ngIf="data.contractStatus == 5"></nz-divider>
+        <a href="javascript:;" (click)="showPreview = true; storeInfo = data" *ngIf="data.contractStatus == 5">查看账号</a>
         <nz-divider nzType="vertical"></nz-divider>
-        <a href="javascript:;" (click)="discarded(data)">废弃</a>
+        <a href="javascript:;" (click)="record(data)">跟踪记录</a>
       </td>
     </ng-template>
     <ng-template #EaBtns>
@@ -35,23 +44,106 @@
 
 
 
-<nz-modal [(nzVisible)]="showDiscarded" nzTitle="废弃合同" (nzOnCancel)="showDiscarded = false" (nzOnOk)="discarded()">
+<nz-modal 
+  [(nzVisible)]="showModal" 
+  [nzTitle]="formGroup.get('contractStatus').value == 3 ? '解约合同' : formGroup.get('contractStatus').value == 4 ? '废弃合同' : '绑定账号'" 
+  (nzOnCancel)="showModal = false" 
+  (nzOnOk)="save()">
+  <form nz-form [formGroup]=formGroup>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">提交人</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input formControlName="createUser" disabled>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="contractNo">合同编号</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input formControlName="contractNo" disabled>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item *ngIf="formGroup.get('contractStatus').value == 4">
+      <nz-form-label [nzSpan]="6" nzRequired>废弃原因</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <textarea nz-input placeholder="请输入废弃原因" [nzAutosize]="{ minRows: 2, maxRows: 4 }" formControlName="abandonReason"></textarea>
+        <nz-form-explain *ngIf="formGroup.get('abandonReason').dirty && formGroup.get('abandonReason').hasError('required')">请输入废弃原因！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item *ngIf="formGroup.get('contractStatus').value == 3">
+      <nz-form-label [nzSpan]="6" nzRequired>解约原因</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <textarea nz-input placeholder="请输入解约原因" [nzAutosize]="{ minRows: 2, maxRows: 4 }" formControlName="terminateReason"></textarea>
+        <nz-form-explain *ngIf="formGroup.get('terminateReason').dirty && formGroup.get('terminateReason').hasError('required')">请输入解约原因！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item *ngIf="formGroup.get('contractStatus').value == 5">
+      <nz-form-label [nzSpan]="6" nzRequired>设备编号</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input placeholder="请输入设备编号" formControlName="equipmentOrder">
+        <nz-form-explain *ngIf="formGroup.get('equipmentOrder').dirty && formGroup.get('equipmentOrder').hasError('required')">请输入设备编号！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item *ngIf="formGroup.get('contractStatus').value == 5">
+      <nz-form-label [nzSpan]="6" nzRequired>安装日期</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <nz-date-picker formControlName="installationDate" nzFormat="yyyy-MM-dd" nzPlaceHolder="请选择安装日期" style="width: 100%"></nz-date-picker>
+        <nz-form-explain *ngIf="formGroup.get('installationDate').dirty && formGroup.get('installationDate').hasError('required')">请选择安装日期！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>
+</nz-modal>
+
+<nz-modal 
+  [(nzVisible)]="showPreview" 
+  nzTitle="查看账号" 
+  (nzOnCancel)="showPreview = false"
+  nzOkText="重置账号"
+  (nzOnOk)="resetPassword()">
+
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="email">提交人</nz-form-label>
+    <nz-form-label [nzSpan]="6">合同编号</nz-form-label>
     <nz-form-control [nzSpan]="14">
-      <input nz-input name="email" type="email" id="email" disabled>
+      <input nz-input [ngModel]="storeInfo.contractNo" disabled>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="email">合同编号</nz-form-label>
+    <nz-form-label [nzSpan]="6">设备编号</nz-form-label>
     <nz-form-control [nzSpan]="14">
-      <input nz-input name="email" type="email" id="email">
+      <input nz-input [ngModel]="storeInfo.equipmentOrder" disabled>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="email">废弃原因</nz-form-label>
+    <nz-form-label [nzSpan]="6">账号</nz-form-label>
     <nz-form-control [nzSpan]="14">
-      <input nz-input name="email" type="email" id="email">
+      <input nz-input [ngModel]="storeInfo.equipmentAccount" disabled>
     </nz-form-control>
   </nz-form-item>
+</nz-modal>
+
+<nz-modal 
+  [(nzVisible)]="showRecord" 
+  nzTitle="跟踪记录" 
+  (nzOnCancel)="showRecord = false" 
+  nzOkText="发布跟踪记录" (nzOnOk)="createRecord()">
+  <form nz-form [formGroup]="recordGroup">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzRequired>跟踪记录</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <textarea nz-input placeholder="请输入跟踪记录" [nzAutosize]="{ minRows: 2, maxRows: 4 }" formControlName="recordContent"></textarea>
+        <nz-form-explain *ngIf="recordGroup.get('recordContent').dirty && recordGroup.get('recordContent').hasError('required')">请输入跟踪记录！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <ng-container *ngFor="let item of recordList">
+    <nz-divider></nz-divider>
+    <div>
+      <p>{{ item.createTime }}<span style="margin-left: 24px;">操作人：{{ item.operatorName }}</span></p>
+      <p>{{ item.recordContent }}</p>
+    </div>
+  </ng-container>
+
 </nz-modal>

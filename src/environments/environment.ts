@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   version: '0.0.0',
-  domain: 'http://192.168.1.33:8855'
+  // domain: 'http://192.168.1.33:8855'
+  domain: 'http://101.200.177.83:8020/wisdom_store',
 };
 
 /*

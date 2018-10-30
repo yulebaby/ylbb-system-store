@@ -1,15 +1,101 @@
-<div class="container" style="text-align: center; line-height: 200px; color: rgba(0, 0, 0, .45)">好像还没有什么东西可以展示的~！</div>
-
-
-<ng-template #BreadcrumbTmpt>
-  <div class="header">
-    <div class="user-info">
-      <img src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png" alt="">
-      <h2>您好，祝你开心每一天！</h2>
-      <p>欢迎使用鱼乐贝贝ERP后台管理系统</p>
+<div class="container">
+  <form nz-form [nzLayout]="'inline'" [formGroup]="queryForm">
+    <div nz-row [nzGutter]="24">
+      <div nz-col [nzSpan]="12">
+        <nz-form-item nzFlex nz-row>
+          <nz-form-label [nzSpan]="6">播放日期</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-date-picker formControlName="launchDate" nzFormat="yyyy-MM-dd" nzPlaceHolder="请选择播放日期"></nz-date-picker>
+          <nz-form-explain *ngIf="queryForm.get('launchDate').dirty && queryForm.get('launchDate').hasError('required')">请选择播放日期！</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <nz-form-item nzFlex nz-row>
+          <nz-form-label [nzSpan]="6">所属品牌</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-select formControlName="brandCode" nzPlaceHolder="请选择所属品牌">
+              <nz-option *ngFor="let option of brandList" [nzLabel]="option.brandName" [nzValue]="option.brandCode"></nz-option>
+          <nz-form-explain *ngIf="queryForm.get('brandCode').dirty && queryForm.get('brandCode').hasError('required')">请选择所属品牌！</nz-form-explain>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="12">
+        <nz-form-item nzFlex nz-row>
+          <nz-form-label [nzSpan]="6">所属门店</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-cascader formControlName="shop" [nzLoadData]="loadData" nzPlaceHolder="请选择所属门店"></nz-cascader>
+          <nz-form-explain *ngIf="queryForm.get('shop').dirty && queryForm.get('shop').hasError('required')">请选择所属门店！</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col [nzSpan]="10" class="hp-query-btns">
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="primary" (click)="submit()">查询</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
     </div>
-    <div class="user-cell">
-      
+  </form>
+</div>
+
+<div class="container" style="margin-top: 24px">
+  <nz-table 
+    #basicTable 
+    [nzTitle]="tableTitle"
+    [nzBordered]="true"
+    [nzData]="advertisingInfo.resultList">
+    <thead>
+      <tr>
+        <th>播放顺序</th>
+        <th>客户名称</th>
+        <th>广告类型</th>
+        <th>广告样式</th>
+        <th>时长</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data; let idx = index">
+        <td>{{ idx + 1 }}</td>
+        <td>{{ data.advertiserName }}</td>
+        <td>{{ data.advertisingType == 1 ? '图片' : '视频' }}</td>
+        <td>{{ data.advertisingStyle == 1 ? '横屏' : data.advertisingStyle == 2 ? '竖屏' : '全屏' }}</td>
+        <td>{{ data.advertisingTime }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <ng-template #tableTitle>
+    广告条数：{{ advertisingInfo.advertisingCount }}条
+    <span style="margin-left: 24px">共计播放时长：{{ advertisingInfo.totalTime }}</span>
+  </ng-template>
+</div>
+
+<div class="container" style="margin-top: 24px">
+  <nz-carousel #carousel>
+    <div nz-carousel-content *ngFor="let data of advertisingInfo.resultList">
+      <div class="box">
+        <ng-container *ngIf="data.advertisingStyle == 1">
+          <img *ngIf="data.topPicture" [src]="data.topPicture" style="width: 100%; position: absolute; top: 0;">
+          <img *ngIf="data.downPicture" [src]="data.downPicture" style="width: 100%; position: absolute; bottom: 0">
+          <img *ngIf="data.advertisingType == 1" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)">
+          <video *ngIf="data.advertisingType == 2" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)"></video>
+        </ng-container>
+        <ng-container *ngIf="data.advertisingStyle == 2">
+          <img *ngIf="data.advertisingType == 1" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)">
+          <video *ngIf="data.advertisingType == 2" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)"></video>
+        </ng-container>
+        <ng-container *ngIf="data.advertisingStyle == 3">
+          <img *ngIf="data.advertisingType == 1" [src]="data.sourceUrl" style="height: 100%; width: 100%;">
+          <video *ngIf="data.advertisingType == 2" [src]="data.sourceUrl" style="height: 100%; width: 100%;"></video>
+        </ng-container>
+      </div>
     </div>
+  </nz-carousel>
+  <div style="text-align: center; margin-top: 24px;" *ngIf="advertisingInfo.resultList.length">
+    <button nz-button nzType="primary" style="margin-right: 8px;" (click)="carousel.pre()">上一个</button>
+    <button nz-button nzType="default" (click)="carousel.next()">下一个</button>
   </div>
-</ng-template>
+</div>

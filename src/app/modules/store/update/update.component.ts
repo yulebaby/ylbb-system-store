@@ -38,7 +38,7 @@ export class UpdateComponent implements OnInit {
       address: [, [Validators.required]],
       shopAddress: [, [Validators.required]],
       signingDate: [, [Validators.required]],
-      contractAttachment: [, [Validators.required]],
+      contractAttachment: [],
     });
 
     if (this.storeInfo.id) {

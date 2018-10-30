@@ -3,7 +3,7 @@
     #listPage 
     url="/advertising/queryListAdvertising" 
     [queryNode]="queryNode" 
-    [tableThead]="[ '广告ID', '客户名称', '广告类型', '广告样式', '时长', '广告费用', '提交人', '投放日期', '下线日期', '状态', '广告标签', '投放数据', '操作' ]"
+    [tableThead]="[ '广告ID', '客户名称', '广告类型', '广告样式', '时长', '广告费用', '提交人', '投放日期', '下线日期', '状态', '广告标签', '操作' ]"
     [EaTableTbodyTr]="EaTableTbodyTr" 
     [EaBtns]="EaBtns">
     <ng-template #EaTableTbodyTr let-data>
@@ -17,8 +17,7 @@
       <td>{{ data.launchDate }}</td>
       <td>{{ data.offlineDate }}</td>
       <td>{{ data.advertisingStatus == 1 ? '待投放' : data.advertisingStatus == 2 ? '投放中' : '已下线' }}</td>
-      <td></td>
-      <td></td>
+      <td>{{ data.labelNames }}</td>
       <td>
         <a href="javascript:;" (click)="update(data)">编辑</a>
       </td>
