@@ -56,8 +56,8 @@ export class UpdateComponent implements OnInit {
         this.http.post('/advertising/listAdvertiesmentShop', { paramJson: JSON.stringify({ city: this.advertisingInfo.city }) }, false).then(res => this.shopList = res.result);
         let addVal = this.advertisingInfo.id && this.advertisingInfo.province ? [this.advertisingInfo.province, this.advertisingInfo.city] : null;
         this.formGroup.addControl('address', new FormControl(addVal, [Validators.required]));
-        let shopVal = this.advertisingInfo.id && this.advertisingInfo.province && this.advertisingInfo.shopIds ? this.advertisingInfo.shopIds.split(',').map(res => res = parseInt(res)) : null;
-        this.formGroup.addControl('shops', new FormControl(shopVal, [Validators.required]));
+        let shopVal = this.advertisingInfo.id && this.advertisingInfo.shopIds ? this.advertisingInfo.shopIds.split(',').map(res => res = parseInt(res)) : null;
+        this.formGroup.addControl('shops', new FormControl(shopVal));
       }
       if (this.advertisingInfo.advertisingStyle == 1) {
         this.formGroup.addControl('topPicture', new FormControl(this.advertisingInfo.topPicture || null));

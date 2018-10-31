@@ -81,7 +81,7 @@
           <img *ngIf="data.topPicture" [src]="data.topPicture" style="max-width: 100%; position: absolute; top: 0;">
           <img *ngIf="data.downPicture" [src]="data.downPicture" style="max-width: 100%; position: absolute; bottom: 0">
           <img *ngIf="data.advertisingType == 1" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)">
-          <video *ngIf="data.advertisingType == 2" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)"></video>
+          <video controls *ngIf="data.advertisingType == 2" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)"></video>
         </ng-container>
         <ng-container *ngIf="data.advertisingStyle == 2">
           <img *ngIf="data.advertisingType == 1" [src]="data.sourceUrl" style="max-height: 100%; max-width: 100%; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0)">

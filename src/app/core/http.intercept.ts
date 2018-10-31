@@ -29,7 +29,7 @@ export class NoopInterceptor implements HttpInterceptor {
      */
     if (req.method === 'POST') {
       req = req.clone({
-        body: serialize(Object.assign(req.body, { token: 'xxxxxxxx' })),
+        body: serialize(Object.assign(req.body, { token: window.localStorage.getItem('token') || '' })),
         setHeaders: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
         withCredentials: false
       })
@@ -47,8 +47,9 @@ export class NoopInterceptor implements HttpInterceptor {
         if (event instanceof HttpResponse) {
           if (event.status == 200 || event.status == 304) {
             if (event.body && event.body.code == 3000) {
-              window.localStorage.removeItem('userInfo');
-              this.router.navigateByUrl('/login');
+              // window.localStorage.removeItem('userInfo');
+              // this.router.navigateByUrl('/login');
+              window.location.href = 'http://ucenter.beibeiyue.com/#/home/login';
             }
           } else {
             this.message.error('网络错误，请刷新重试');

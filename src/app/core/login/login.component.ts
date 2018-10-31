@@ -30,12 +30,12 @@ export class LoginComponent implements OnInit {
       }
     })
     this.route.queryParamMap.subscribe((res: any) => {
-      // if (res.params.token) {
-        window.localStorage.setItem('token', 'xxxxx');
+      if (res.params.token) {
+        window.localStorage.setItem('token', res.params.token);
         setTimeout(() => {
           this.router.navigateByUrl('/home');
         });
-      // }
+      }
     })
   }
 }
