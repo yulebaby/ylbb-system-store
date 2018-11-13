@@ -15,6 +15,7 @@
         <nz-form-control>
           <input nz-input placeholder="请输入广告费用" formControlName="advertisingCost" id="advertisingCost">
           <nz-form-explain *ngIf="formGroup.get('advertisingCost').dirty && formGroup.get('advertisingCost').hasError('required')">请输入广告费用！</nz-form-explain>
+          <nz-form-explain *ngIf="formGroup.get('advertisingCost').dirty && formGroup.get('advertisingCost').hasError('pattern')">请输入正确的广告费用！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -57,6 +58,7 @@
         <nz-form-control>
           <input nz-input placeholder="请输入广告展示时间" formControlName="advertisingTime" id="advertisingTime">
           <nz-form-explain *ngIf="formGroup.get('advertisingTime').dirty && formGroup.get('advertisingTime').hasError('required')">请输入广告展示时间！</nz-form-explain>
+          <nz-form-explain *ngIf="formGroup.get('advertisingTime').dirty && formGroup.get('advertisingTime').hasError('pattern')">请输入广告展示时间！</nz-form-explain>
         </nz-form-control>
       </nz-form-item>
     </div>

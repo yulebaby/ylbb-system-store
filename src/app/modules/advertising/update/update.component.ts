@@ -34,9 +34,9 @@ export class UpdateComponent implements OnInit {
     this.formGroup = this.fb.group({
       id: [],
       advertiserName: [, [Validators.required]],
-      advertisingCost: [, [Validators.required]],
+      advertisingCost: [, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       brandCode: [, [Validators.required]],
-      advertisingTime: [, [Validators.required]],
+      advertisingTime: [, [Validators.required, Validators.pattern(/^[1-9]\d*$/)]],
       date: [, [Validators.required]],
       isAll: [true],
       labelId: [],

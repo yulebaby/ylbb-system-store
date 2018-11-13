@@ -33,13 +33,12 @@ export class AppComponent {
       }
     });
 
-    try {
-      let userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
-      this.store.dispatch({ type: 'setUserInfo', payload: userInfo });
-      if (!userInfo.id) throw "未登录";
-    } catch (e) {
-      this.message.warning('请登录!');
-      this.router.navigateByUrl('/login');
-    }
+    this.store.dispatch({
+      type: 'setUserInfo', payload: {
+        name: '管理员',
+        id: 1,
+        roleAllowPath: '**'
+      }
+    })
   }
 }
