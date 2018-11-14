@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ListPageComponent } from './../../../ng-relax/components/list-page/list-page.component';
@@ -6,6 +7,8 @@ import { HttpService } from './../../../ng-relax/services/http.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QueryNode } from 'src/app/ng-relax/components/query/query.component';
 import { UpdateComponent } from '../update/update.component';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, debounceTime, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list',
@@ -50,7 +53,8 @@ export class ListComponent implements OnInit {
     private http: HttpService,
     private drawer: NzDrawerService,
     private fb: FormBuilder = new FormBuilder(),
-    private format: DatePipe
+    private format: DatePipe,
+    private httpClient: HttpClient
   ) { 
     this.formGroup = this.fb.group({
       id: [],
@@ -61,7 +65,14 @@ export class ListComponent implements OnInit {
     this.recordGroup = this.fb.group({ 
       shopId: [],
       recordContent: [, [Validators.required]]
-    })
+    });
+
+    const getBindStoreList = (shopName: string) => this.httpClient.post(`/contractShop/listErpStore`, { shopName }).pipe(map((res: any) => res.result)).pipe(map((list: any) => list));
+    const optionList$: Observable<string[]> = this.searchChange$.asObservable().pipe(debounceTime(500)).pipe(switchMap(getBindStoreList));
+    optionList$.subscribe(data => {
+      this.bindStoreList = data;
+      this.bindStoreSearchLoading = false;
+    });
   }
 
   ngOnInit() {
@@ -82,10 +93,6 @@ export class ListComponent implements OnInit {
     drawerRef.afterClose.subscribe(res => res && this.listPage.EaTable._request());
   }
 
-  delete(id) {
-
-  }
-
 
   showModal: boolean;
   /* --------------- 废弃 --------------- */
@@ -98,6 +105,7 @@ export class ListComponent implements OnInit {
     this.formGroup.removeControl('terminateReason');
     this.formGroup.removeControl('equipmentOrder');
     this.formGroup.removeControl('installationDate');
+    this.formGroup.removeControl('storeId');
     this.formGroup.patchValue(storeInfo);
   }
 
@@ -111,19 +119,22 @@ export class ListComponent implements OnInit {
     this.formGroup.removeControl('abandonReason');
     this.formGroup.removeControl('equipmentOrder');
     this.formGroup.removeControl('installationDate');
+    this.formGroup.removeControl('storeId');
     this.formGroup.patchValue(storeInfo);
   } 
 
-  /* --------------- 解约 --------------- */
+  /* --------------- 绑定账号 --------------- */
   binding(data) {
     let storeInfo = JSON.parse(JSON.stringify(data))
     this.showModal = true;
     storeInfo.contractStatus = 5; 
     this.formGroup.addControl('equipmentOrder', new FormControl(null, [Validators.required]));
     this.formGroup.addControl('installationDate', new FormControl(null, [Validators.required]));
+    this.formGroup.addControl('storeId', new FormControl(null, [Validators.required]));
 
     this.formGroup.removeControl('abandonReason');
     this.formGroup.removeControl('terminateReason');
+    this.formGroup.reset();
     this.formGroup.patchValue(storeInfo);
   }
 
@@ -172,6 +183,17 @@ export class ListComponent implements OnInit {
       }
     } else {
       this.http.post('/contractShop/createTrackRecord', { paramJson: JSON.stringify(this.recordGroup.value) }).then(res => this.showRecord = false);
+    }
+  }
+
+  /* --------------- 绑定门店 --------------- */
+  bindStoreSearchLoading: boolean;
+  bindStoreList: any[] = [];
+  searchChange$ = new BehaviorSubject('');
+  onSearch(e) {
+    if (e) {
+      this.bindStoreSearchLoading = true;
+      this.searchChange$.next(e);
     }
   }
 

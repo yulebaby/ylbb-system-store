@@ -49,7 +49,7 @@
   (nzOnCancel)="showModal = false" 
   [nzOkLoading]="saveLoading"
   (nzOnOk)="save()">
-  <form nz-form [formGroup]=formGroup>
+  <form nz-form [formGroup]="formGroup">
     <nz-form-item>
       <nz-form-label [nzSpan]="6">提交人</nz-form-label>
       <nz-form-control [nzSpan]="14">
@@ -93,7 +93,21 @@
         <nz-form-explain *ngIf="formGroup.get('installationDate').dirty && formGroup.get('installationDate').hasError('required')">请选择安装日期！</nz-form-explain>
       </nz-form-control>
     </nz-form-item>
-
+    <nz-form-item *ngIf="formGroup.get('contractStatus').value == 5">
+      <nz-form-label [nzSpan]="6" nzRequired>门店</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <nz-select formControlName="storeId" nzPlaceHolder="请选择门店" nzAllowClear nzShowSearch
+          [nzServerSearch]="true" (nzOnSearch)="onSearch($event)">
+          <ng-container *ngFor="let o of bindStoreList">
+            <nz-option *ngIf="!bindStoreSearchLoading" [nzValue]="o.storeId" [nzLabel]="o.shopName"></nz-option>
+          </ng-container>
+          <nz-option *ngIf="bindStoreSearchLoading" nzDisabled nzCustomContent>
+            <i nz-icon type="loading" class="loading-icon"></i> 加载中...
+          </nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="formGroup.get('storeId').dirty && formGroup.get('storeId').hasError('required')">请选择门店！</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>
   </form>
 </nz-modal>
 

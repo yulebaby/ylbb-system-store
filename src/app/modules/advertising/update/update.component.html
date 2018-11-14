@@ -101,7 +101,7 @@
       <nz-form-item>
         <nz-form-label nzRequired>投放日期</nz-form-label>
         <nz-form-control>
-          <nz-range-picker formControlName="date" nzAllowClear nzFormat="yyyy-MM-dd"></nz-range-picker>
+          <nz-range-picker formControlName="date" nzAllowClear nzFormat="yyyy-MM-dd" [nzDisabledDate]="_disabledDate"></nz-range-picker>
         </nz-form-control>
       </nz-form-item>
     </div>
